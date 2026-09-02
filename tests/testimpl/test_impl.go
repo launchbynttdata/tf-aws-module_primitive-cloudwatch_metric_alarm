@@ -1,8 +1,8 @@
 package testimpl
 
 import (
-	"testing"
 	"context"
+	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -17,8 +17,8 @@ func TestComposableComplete(t *testing.T, ctx types.TestContext) {
 	cloudwatchClient := GetCloudWatchClient(t)
 
 	t.Run("TestAlarmExists", func(t *testing.T) {
-		expectedAlarmName := terraform.Output(t, ctx.TerratestTerraformOptions(), "alarm_name")
-		expectedAlarmArn := terraform.Output(t, ctx.TerratestTerraformOptions(), "arn")
+		expectedAlarmName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "alarm_name")
+		expectedAlarmArn := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "arn")
 
 		alarms, err := cloudwatchClient.DescribeAlarms(context.TODO(), &cloudwatch.DescribeAlarmsInput{
 			AlarmNames: []string{expectedAlarmName},
@@ -30,8 +30,8 @@ func TestComposableComplete(t *testing.T, ctx types.TestContext) {
 
 	t.Run("TestAlarmMetricQueryIDs", func(t *testing.T) {
 		ctx.EnabledOnlyForTests(t, "metric_query")
-		expectedAlarmName := terraform.Output(t, ctx.TerratestTerraformOptions(), "alarm_name")
-		expectedAlarmMetricKeys := terraform.OutputList(t, ctx.TerratestTerraformOptions(), "metric_keys")
+		expectedAlarmName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "alarm_name")
+		expectedAlarmMetricKeys := terraform.OutputListContext(t, context.Background(), ctx.TerratestTerraformOptions(), "metric_keys")
 
 		alarms, err := cloudwatchClient.DescribeAlarms(context.TODO(), &cloudwatch.DescribeAlarmsInput{
 			AlarmNames: []string{expectedAlarmName},
